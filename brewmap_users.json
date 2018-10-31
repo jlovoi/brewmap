@@ -1,4 +1,26 @@
-{"joe lovoi": 1,
-  "zach schuermann": 2,
-  "sam jett": 3,
-  "dane powell": 4}
+{
+  "joe lovoi": {
+    "user_id": 1,
+    "reviews": [
+      1,
+      2
+    ]
+  },
+  "dane powell": {
+    "user_id": 2,
+    "reviews": [
+      3,
+      4
+    ]
+  },
+  "zach schuermann": {
+    "user_id": 3,
+    "reviews": [
+    ]
+  },
+  "sam jett": {
+    "user_id": 4,
+    "reviews": [
+    ]
+  }
+}
