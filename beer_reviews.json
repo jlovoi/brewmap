@@ -6,8 +6,8 @@
       "name": "guinness",
       "weight": 7,
       "color": 9,
-      "sour": 1,
       "fruit": 2,
+      "sour": 1,
       "roast": 8,
       "review_id": 1
     },
@@ -17,8 +17,8 @@
       "name": "pabst blue ribbon",
       "weight": 3,
       "color": 2,
-      "fruit": 1,
       "sour": 1,
+      "fruit": 1,
       "roast": 1,
       "review_id": 2
     },
@@ -28,10 +28,23 @@
       "name": "shiner bock",
       "weight": 3,
       "color": 5,
-      "sour": 1,
       "fruit": 1,
+      "sour": 1,
       "roast": 3,
       "review_id": 3
+    }
+  ],
+  "5": [
+    {
+      "profile": 2,
+      "rating": 6,
+      "name": "shiner bock",
+      "weight": 4,
+      "color": 6,
+      "sour": 1,
+      "fruit": 1,
+      "roast": 2,
+      "review_id": 7
     }
   ],
   "4": [
@@ -41,8 +54,8 @@
       "name": "shiner bock",
       "weight": 4,
       "color": 6,
-      "sour": 1,
       "fruit": 1,
+      "sour": 1,
       "roast": 4,
       "review_id": 4
     }

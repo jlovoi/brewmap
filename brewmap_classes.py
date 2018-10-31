@@ -75,7 +75,7 @@ class Beer:
         with open('beer_data.json', 'w') as f:
             json.dump(beer_data, f)
 
-
+# Need to get reviews to update for brewmap_users
 class User:
     def __init__(self):
         # Creates a user profile, with a 'reviews' list, containing all of their respective 'beer' dictionaries
@@ -105,7 +105,7 @@ class User:
         username = raw_input("That username is not found, please enter your first and fast name again: ").lower()
         with open('brewmap_users.json') as f:
             brewmap_users = json.load(f)
-        self.userid = brewmap_users.len() + 1
+        self.userid = len(brewmap_users) + 1
         self.username = username
         print("Successfully created user: " + username.title())
 
