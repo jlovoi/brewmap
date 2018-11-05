@@ -122,15 +122,19 @@ class User:
         beer_name = raw_input("What is the name of the beer?\n").lower()
 
         beer = BeerReview().new_review(self.userid, beer_name)
-        self.review_ids.append(beer['review_id'])
-        print "printing"
-        print self.reviews
-        self.reviews.append(beer)
-        print self.reviews
-        self.add_review()
-
-        # Update this beer's BrewMap with the review
-        BrewMap(beer['name']).update(beer)
+        # Check if this user has already reviewed this beer
+        duplicate = False
+        for review in self.reviews:
+            if review['name'] == beer['name']:
+                duplicate = True
+                response = raw_input("You have already reviewed this beer, are you sure you want to overwrite current"
+                                     " review data?(y/n)")
+        if response == 'y' or not duplicate:
+            self.review_ids.append(beer['review_id'])
+            self.reviews.append(beer)
+            self.add_review()
+            # Update this beer's BrewMap with the review
+            BrewMap(beer['name']).update(beer)
 
     def add_review(self):
         # Add the updated list of user reviews to beer_reviews.json
