@@ -1,7 +1,7 @@
 import json
 
 
-class Beer:
+class BeerReview:
     def __init__(self):
         # Creates an 'empty' beer with all characteristics defined as 0
         # Create the beer's characteristic dict
@@ -48,6 +48,7 @@ class Beer:
             elif response != 'y':
                 self.review['name'] = beer_name
 
+        # User given data to create the BeerReview
         self.review['weight'] = int(raw_input("How heavy is the beer? (1 for light, 10 for heavy)\n"))
         self.review['color'] = int(raw_input("Describe the color. (1 for light, 10 for dark)\n"))
         self.review['profile'] = int(raw_input("What is the profile? (1 for Malty/Sweet, 10 for Hoppy/Bitter)\n"))
@@ -58,29 +59,22 @@ class Beer:
 
         # Fetch the review_count from brewmaps.json, set this review_id
         with open('review_count.json') as f:
-            brewmaps_data = json.load(f)
-        # Increment review_count, set this review_id
-        brewmaps_data['review_count'] += 1
-        self.review['review_id'] = brewmaps_data['review_count']
+            review_count = json.load(f)
+            # Increment review_count, set this review_id
+            review_count['review_count'] += 1
+            self.review['review_id'] = review_count['review_count']
         with open('review_count.json', 'w') as f:
-            json.dump(brewmaps_data, f)
+            json.dump(review_count, f)
 
         return self.review
 
-    def write_data(self, data):
-        # Write info to .json file
-        with open('beer_data.json') as f:
-            beer_data = json.load(f)
-            beer_data.update(data)
-        with open('beer_data.json', 'w') as f:
-            json.dump(beer_data, f)
 
-# Need to get reviews to update for brewmap_users
 class User:
     def __init__(self):
         # Creates a user profile, with a 'reviews' list, containing all of their respective 'beer' dictionaries
         self.userid = 0
         self.reviews = []
+        self.review_ids = []
         self.username = ""
 
     def sign_in(self):
@@ -90,27 +84,34 @@ class User:
         username = raw_input("Enter first and last name: ").lower()
         for key, val in brewmap_users.items():
             if username == key:
-                self.userid = val
-                self.reviews = val['reviews']
+                self.userid = val['user_id']
+                self.review_ids = val['review_ids']
                 self.username = username
                 print("Successfully logged in as " + key.title())
                 break
 
         # If user is not found, make a new one
         if self.userid == 0:
-            self.sign_up()
+            self.sign_up(username)
 
-    def sign_up(self):
+        # Fetch beer_review data for this user, if it exists
+        with open('beer_reviews.json') as f:
+            beer_reviews = json.load(f)
+            for key, val in beer_reviews.items():
+                if key == str(self.userid):
+                    self.reviews = val
+
+    def sign_up(self, username):
         # Create new user
-        username = raw_input("That username is not found, please enter your first and fast name again: ").lower()
+        print("That username is not found, creating new user...")
         with open('brewmap_users.json') as f:
             brewmap_users = json.load(f)
-        self.userid = len(brewmap_users) + 1
+            self.userid = len(brewmap_users) + 1
         self.username = username
         print("Successfully created user: " + username.title())
 
         # add them to brewmap_users dictionary
-        brewmap_users[self.username] = self.userid
+        brewmap_users[self.username] = {"user_id": self.userid, "review_ids": self.review_ids}
 
         with open('brewmap_users.json', 'w') as f:
             json.dump(brewmap_users, f)
@@ -120,9 +121,12 @@ class User:
         # User reviews a new beer, calling new_review()
         beer_name = raw_input("What is the name of the beer?\n").lower()
 
-        beer = Beer().new_review(self.userid, beer_name)
+        beer = BeerReview().new_review(self.userid, beer_name)
+        self.review_ids.append(beer['review_id'])
+        print "printing"
+        print self.reviews
         self.reviews.append(beer)
-
+        print self.reviews
         self.add_review()
 
         # Update this beer's BrewMap with the review
@@ -135,6 +139,16 @@ class User:
             beer_reviews[str(self.userid)] = self.reviews
         with open('beer_reviews.json', 'w') as f:
             json.dump(beer_reviews, f)
+
+        # Add the updated review_ids list to brewmap_users.json
+        with open('brewmap_users.json') as f:
+            brewmap_users = json.load(f)
+            for key, val in brewmap_users.items():
+                if key == self.username:
+                    val['review_ids'] = self.review_ids
+        with open('brewmap_users.json', 'w') as f:
+            json.dump(brewmap_users, f);
+
 
 class BrewMap:
     def __init__(self, beer_name):
@@ -156,6 +170,16 @@ class BrewMap:
                 self.data['roast'] = val['roast']
                 self.data['rating'] = val['rating']
                 self.data['count'] = val['count']
+
+        if not bool(self.data):
+            self.data['weight'] = 0
+            self.data['color'] = 0
+            self.data['profile'] = 0
+            self.data['fruit'] = 0
+            self.data['sour'] = 0
+            self.data['roast'] = 0
+            self.data['rating'] = 0
+            self.data['count'] = 0
 
     def update(self, beer_review):
         # Multiply data by count

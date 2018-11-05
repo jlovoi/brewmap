@@ -1,25 +1,25 @@
 {
   "joe lovoi": {
-    "reviews": [
-      1,
-      2
-    ],
-    "user_id": 1
+    "user_id": 1,
+    "review_ids": [
+      20,
+      21
+    ]
   },
   "zach schuermann": {
-    "reviews": [],
-    "user_id": 3
+    "user_id": 3,
+    "review_ids": []
   },
   "sam jett": {
-    "reviews": [],
-    "user_id": 4
+    "user_id": 4,
+    "review_ids": [
+      13
+    ]
   },
-  "ryan shoemaker": 5,
   "dane powell": {
-    "reviews": [
-      3,
-      4
-    ],
-    "user_id": 2
+    "user_id": 2,
+    "review_ids": [
+      6
+    ]
   }
 }
